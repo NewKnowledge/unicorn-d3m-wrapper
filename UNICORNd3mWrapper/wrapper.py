@@ -45,11 +45,11 @@ class Hyperparams(hyperparams.Hyperparams):
 class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
     metadata = metadata_base.PrimitiveMetadata({
         # Simply an UUID generated once and fixed forever. Generated using "uuid.uuid4()".
-        'id': "404fae2a-2f0a-4c9b-9ad2-fb1528990561",
+        'id': "'475c26dc-eb2e-43d3-acdb-159b80d9f099'",
         'version': __version__,
         'name': "unicorn",
         # Keywords do not have a controlled vocabulary. Authors can put here whatever they find suitable.
-        'keywords': [],
+        'keywords': ['Image Clustering', 'fast fourier transfom', 'Image'],
         'source': {
             'name': __author__,
             'uris': [
@@ -64,7 +64,7 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
         "installation": [
             {
                 "type": "PIP",
-                "package_uri": "git+https://github.com/NewKnowledge/nk_unicorn.git@XXXXXXXXXXX#egg=nk_unicorn"
+                "package_uri": "git+https://github.com/NewKnowledge/nk_unicorn.git@ee3a9bf93982705054207e11ce9affab65414956#egg=nk_unicorn"
             },
             {
                 "type": "PIP",
