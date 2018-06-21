@@ -64,7 +64,7 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
         "installation": [
             {
                 "type": "PIP",
-                "package_uri": "git+https://github.com/NewKnowledge/nk_unicorn.git@ee3a9bf93982705054207e11ce9affab65414956#egg=nk_unicorn"
+                "package_uri": "git+https://github.com/NewKnowledge/nk_unicorn.git@c40ac04dddf4bfa955607f572722d784541690c6#egg=nk_unicorn"
             },
             {
                 "type": "PIP",
