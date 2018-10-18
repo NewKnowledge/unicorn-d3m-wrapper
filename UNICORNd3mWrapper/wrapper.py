@@ -11,6 +11,8 @@ from d3m.primitive_interfaces.base import PrimitiveBase, CallResult
 from d3m import container, utils
 from d3m.metadata import hyperparams, base as metadata_base, params
 
+from keras import backend as K
+
 __author__ = 'Distil'
 __version__ = '1.0.0'
 
@@ -154,6 +156,7 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
             imagepath_df = pd.concat(
                 [imagepath_df.reset_index(drop=True), result_df], axis=1)
 
+        K.clear_session()
         return CallResult(imagepath_df)
 
 
