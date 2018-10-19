@@ -11,6 +11,8 @@ from d3m.primitive_interfaces.base import PrimitiveBase, CallResult
 from d3m import container, utils
 from d3m.metadata import hyperparams, base as metadata_base, params
 
+from keras import backend as K
+
 __author__ = 'Distil'
 __version__ = '1.0.0'
 
@@ -98,6 +100,20 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
     def set_training_data(self, *, inputs: Inputs, outputs: Outputs) -> None:
         pass
 
+    def _get_column_base_path(self, inputs: Inputs, column_name: str) -> str:
+        # fetches the base path associated with a column given a name if it exists
+        column_metadata = inputs.metadata.query((metadata_base.ALL_ELEMENTS,))
+        if not column_metadata or len(column_metadata) == 0:
+            return None
+
+        num_cols = column_metadata['dimension']['length']
+        for i in range(0, num_cols):
+            col_data = inputs.metadata.query((metadata_base.ALL_ELEMENTS, i))
+            if col_data['name'] == column_name and 'location_base_uris' in col_data:
+                return col_data['location_base_uris'][0]
+
+        return None
+
     def produce(self, *, inputs: Inputs) -> CallResult[Outputs]:
         """
             Produce image object classification predictions and OCR for an
@@ -123,13 +139,25 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
             result_df = pd.DataFrame()
             output_label = output_labels[i]
 
-            result_df = image_analyzer.cluster_images(
-                imagepath_df.loc[:, ith_column])
+            # get the base uri from the column metadata and remove the the
+            # scheme portion
+            base_path = self._get_column_base_path(inputs, ith_column)
+            if base_path:
+                base_path = base_path.split('://')[1]
+
+            # update the paths with the base if necessary
+            col_paths = imagepath_df.loc[:, ith_column]
+            if base_path:
+                for i in range(0, len(col_paths)):
+                    col_paths[i] = os.path.join(base_path, col_paths[i])
+
+            result_df = image_analyzer.cluster_images(col_paths)
 
             imagepath_df = pd.concat(
                 [imagepath_df.reset_index(drop=True), result_df], axis=1)
 
-        return imagepath_df
+        K.clear_session()
+        return CallResult(imagepath_df)
 
 
 if __name__ == '__main__':
