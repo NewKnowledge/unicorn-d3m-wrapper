@@ -4,7 +4,7 @@ import typing
 import numpy as np
 import pandas as pd
 
-from nk_unicorn import *
+from d3m_unicorn import *
 
 from d3m.primitive_interfaces.base import PrimitiveBase, CallResult
 
@@ -66,7 +66,7 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
         "installation": [
             {
                 "type": "PIP",
-                "package_uri": "git+https://github.com/NewKnowledge/nk_unicorn.git@c40ac04dddf4bfa955607f572722d784541690c6#egg=nk_unicorn"
+                "package_uri": "git+https://github.com/NewKnowledge/d3m_unicorn.git@97b24ce39c3a26c1d753104c80012c352efd6920#egg=d3m_unicorn"
             },
             {
                 "type": "PIP",
