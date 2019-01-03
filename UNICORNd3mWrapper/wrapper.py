@@ -143,7 +143,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
 
         K.clear_session()
         
-        # create metadata for the croc output dataframe
+        # create metadata for the unicorn output dataframe
         unicorn_df = d3m_DataFrame(imagepath_df)
         # first column (d3mIndex)
         col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 0)))
