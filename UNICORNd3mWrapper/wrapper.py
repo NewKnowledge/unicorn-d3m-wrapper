@@ -16,7 +16,7 @@ from d3m.metadata import hyperparams, base as metadata_base
 from keras import backend as K
 
 __author__ = 'Distil'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 Inputs = container.pandas.DataFrame
 Outputs = container.pandas.DataFrame
