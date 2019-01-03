@@ -6,10 +6,12 @@ import pandas as pd
 
 from d3m_unicorn import *
 
-from d3m.primitive_interfaces.base import PrimitiveBase, CallResult
+from d3m.primitive_interfaces.transformer import TransformerPrimitiveBase
+from d3m.primitive_interfaces.base import CallResult
 
 from d3m import container, utils
-from d3m.metadata import hyperparams, base as metadata_base, params
+from d3m.container import DataFrame as d3m_DataFrame
+from d3m.metadata import hyperparams, base as metadata_base
 
 from keras import backend as K
 
@@ -18,11 +20,6 @@ __version__ = '1.0.0'
 
 Inputs = container.pandas.DataFrame
 Outputs = container.pandas.DataFrame
-
-
-class Params(params.Params):
-    pass
-
 
 class Hyperparams(hyperparams.Hyperparams):
     target_columns = hyperparams.Set(
@@ -44,7 +41,7 @@ class Hyperparams(hyperparams.Hyperparams):
     )
 
 
-class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
+class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
     metadata = metadata_base.PrimitiveMetadata({
         # Simply an UUID generated once and fixed forever. Generated using "uuid.uuid4()".
         'id': "'475c26dc-eb2e-43d3-acdb-159b80d9f099'",
@@ -85,20 +82,8 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
         "primitive_family": metadata_base.PrimitiveFamily.DIGITAL_IMAGE_PROCESSING
     })
 
-    def __init__(self, *, hyperparams: Hyperparams)-> None:
-        super().__init__(hyperparams=hyperparams)
-
-    def fit(self) -> None:
-        pass
-
-    def get_params(self) -> Params:
-        return self._params
-
-    def set_params(self, *, params: Params) -> None:
-        self.params = params
-
-    def set_training_data(self, *, inputs: Inputs, outputs: Outputs) -> None:
-        pass
+    def __init__(self, *, hyperparams: Hyperparams, random_seed: int = 0)-> None:
+        super().__init__(hyperparams=hyperparams, random_seed=random_seed)
 
     def _get_column_base_path(self, inputs: Inputs, column_name: str) -> str:
         # fetches the base path associated with a column given a name if it exists
@@ -157,7 +142,41 @@ class unicorn(PrimitiveBase[Inputs, Outputs, Params, Hyperparams]):
                 [imagepath_df.reset_index(drop=True), result_df], axis=1)
 
         K.clear_session()
-        return CallResult(imagepath_df)
+        
+        # create metadata for the croc output dataframe
+        unicorn_df = d3m_DataFrame(imagepath_df)
+        # first column (d3mIndex)
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 0)))
+        col_dict['structural_type'] = type("1")
+        col_dict['name'] = 'd3mIndex'
+        col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/Attribute')
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 0), col_dict)
+        # second column (filename)
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 1)))
+        col_dict['structural_type'] = type("it is a string")
+        col_dict['name'] = "filename"
+        col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 1), col_dict)
+        # third column (bounding_box)
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 2)))
+        col_dict['structural_type'] = type("it is a string")
+        col_dict['name'] = "bounding_box"
+        col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 2), col_dict)
+        # fourth column (label)
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 3)))
+        col_dict['structural_type'] = type("it is a string")
+        col_dict['name'] = "label"
+        col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 3), col_dict)
+        # fifth column (pred_class)
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 4)))
+        col_dict['structural_type'] = type("1")
+        col_dict['name'] = 'pred_class'
+        col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/Attribute')
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 4), col_dict)
+        
+        return CallResult(unicorn_df)
 
 
 if __name__ == '__main__':
