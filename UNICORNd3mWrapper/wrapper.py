@@ -70,7 +70,13 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
                 "package_uri": "git+https://github.com/NewKnowledge/unicorn-d3m-wrapper.git@{git_commit}#egg=UNICORNd3mWrapper".format(
                     git_commit=utils.current_git_commit(os.path.dirname(__file__))
                 ),
-            }
+            },
+                                  {
+            "type": "TGZ",
+            "key": "croc_weights",
+            "file_uri": "http://public.datadrivendiscovery.org/croc.tar.gz",
+            "file_digest":"0be3e8ab1568ec8225b173112f4270d665fb9ea253093cd9ea98c412c9053c92"
+        },
         ],
         # The same path the primitive is registered with entry points in setup.py.
         'python_path': 'd3m.primitives.distil.unicorn',
@@ -82,8 +88,10 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         "primitive_family": metadata_base.PrimitiveFamily.DIGITAL_IMAGE_PROCESSING
     })
 
-    def __init__(self, *, hyperparams: Hyperparams, random_seed: int = 0)-> None:
-        super().__init__(hyperparams=hyperparams, random_seed=random_seed)
+    def __init__(self, *, hyperparams: Hyperparams, random_seed: int = 0, volumes: typing.Dict[str,str]=None)-> None:
+        super().__init__(hyperparams=hyperparams, random_seed=random_seed,  volumes=volumes)
+        
+        self.volumes = volumes
 
     def _get_column_base_path(self, inputs: Inputs, column_name: str) -> str:
         # fetches the base path associated with a column given a name if it exists
@@ -117,7 +125,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         output_labels = self.hyperparams['output_labels']
 
         imagepath_df = inputs
-        image_analyzer = Unicorn()
+        image_analyzer = Unicorn(weights_path=self.volumes["croc_weights"]+"/inception_v3_weights_tf_dim_ordering_tf_kernels.h5")
 
         for i, ith_column in enumerate(target_columns):
             # initialize an empty dataframe
@@ -180,10 +188,12 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
 
 
 if __name__ == '__main__':
+    volumes = {} # d3m large primitive architecture dictionary of large files
+    volumes["croc_weights"]='/home/croc.tar.gz' # location of extracted required files archive
     client = unicorn(
         hyperparams={
             'target_columns': ['test_column'],
-            'output_labels': ['test_column_prefix']})
+            'output_labels': ['test_column_prefix']}, volumes=volumes)
     imagepath_df = pd.DataFrame(
         pd.Series(['http://i0.kym-cdn.com/photos/images/facebook/001/253/011/0b1.jpg',
                    'http://i0.kym-cdn.com/photos/images/facebook/001/253/011/0b1.jpg']))
