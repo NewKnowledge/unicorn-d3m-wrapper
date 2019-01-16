@@ -44,7 +44,7 @@ class Hyperparams(hyperparams.Hyperparams):
 class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
     metadata = metadata_base.PrimitiveMetadata({
         # Simply an UUID generated once and fixed forever. Generated using "uuid.uuid4()".
-        'id': "'475c26dc-eb2e-43d3-acdb-159b80d9f099'",
+        'id': "475c26dc-eb2e-43d3-acdb-159b80d9f099",
         'version': __version__,
         'name': "unicorn",
         # Keywords do not have a controlled vocabulary. Authors can put here whatever they find suitable.
