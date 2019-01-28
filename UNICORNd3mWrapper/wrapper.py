@@ -17,6 +17,7 @@ from keras import backend as K
 
 __author__ = 'Distil'
 __version__ = '1.1.0'
+__contact__ = 'mailto:numa@newknowledge.io'
 
 Inputs = container.pandas.DataFrame
 Outputs = container.pandas.DataFrame
@@ -51,6 +52,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         'keywords': ['Image Clustering', 'fast fourier transfom', 'Image'],
         'source': {
             'name': __author__,
+            'contact': __contact__,
             'uris': [
                 # Unstructured URIs.
                 "https://github.com/NewKnowledge/unicorn-d3m-wrapper",
@@ -79,7 +81,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         },
         ],
         # The same path the primitive is registered with entry points in setup.py.
-        'python_path': 'd3m.primitives.distil.unicorn',
+        'python_path': 'd3m.primitives.digital_image_processing.unicorn.Unicorn',
         # Choose these from a controlled vocabulary in the schema. If anything is missing which would
         # best describe the primitive, make a merge request.
         "algorithm_types": [
