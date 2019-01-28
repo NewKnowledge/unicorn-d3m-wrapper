@@ -43,6 +43,18 @@ class Hyperparams(hyperparams.Hyperparams):
 
 
 class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
+    """
+            Produce image object classification predictions and OCR for an
+            image provided as an URI or filepath
+
+        Parameters
+        ----------
+        inputs : pandas dataframe where a column is a pd.Series of image paths/URLs
+
+        Returns
+        -------
+        output : A dataframe with image labels/classifications/cluster assignments
+        """
     metadata = metadata_base.PrimitiveMetadata({
         # Simply an UUID generated once and fixed forever. Generated using "uuid.uuid4()".
         'id': "475c26dc-eb2e-43d3-acdb-159b80d9f099",
