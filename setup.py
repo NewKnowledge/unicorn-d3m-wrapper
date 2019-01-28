@@ -13,7 +13,7 @@ setup(
         'd3m_unicorn >= 1.0.0'
     ],
     dependency_links=[
-        "git+https://github.com/NewKnowledge/d3m_unicorn@f63695e280959b5ea33877acb8a31e4a7d7335ce#egg=d3m_unicorn-1.0.0"
+        "git+https://github.com/NewKnowledge/d3m_unicorn@464aa4cdf765dc27bcf1056d827d1ed8c24836ec#egg=d3m_unicorn-1.0.0"
     ],
     entry_points={
         'd3m.primitives': [
