@@ -9,15 +9,15 @@ setup(
     keywords=['d3m_primitive'],
     install_requires=[
         'pandas == 0.23.4',
-        'numpy >= 1.13.3',
+        'numpy >= 1.15.4',
         'd3m_unicorn >= 1.0.0'
     ],
     dependency_links=[
-        "git+https://github.com/NewKnowledge/d3m_unicorn@96c5eb004ce9d124c688765aedb3ab6fba54326c#egg=d3m_unicorn-1.0.0"
+        "git+https://github.com/NewKnowledge/d3m_unicorn@f63695e280959b5ea33877acb8a31e4a7d7335ce#egg=d3m_unicorn-1.0.0"
     ],
     entry_points={
         'd3m.primitives': [
-            'distil.unicorn = UNICORNd3mWrapper:unicorn'
+            'digital_image_processing.unicorn.Unicorn = UNICORNd3mWrapper:unicorn'
         ],
     }
 )
