@@ -121,7 +121,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
 
         return None
 
-    def produce(self, *, inputs: Inputs) -> CallResult[Outputs]:
+    def produce(self, *, inputs: Inputs, timeout: float = None, iterations: int = None) -> CallResult[Outputs]:
         """
             Produce image object classification predictions and OCR for an
             image provided as an URI or filepath
