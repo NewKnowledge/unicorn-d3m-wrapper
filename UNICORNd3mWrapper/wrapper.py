@@ -12,6 +12,7 @@ from d3m.primitive_interfaces.base import CallResult
 from d3m import container, utils
 from d3m.container import DataFrame as d3m_DataFrame
 from d3m.metadata import hyperparams, base as metadata_base
+from common_primitives import utils as utils_cp, dataset_to_dataframe as DatasetToDataFrame
 
 from keras import backend as K
 
@@ -163,54 +164,37 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
             imagepath_df = pd.concat(
                 [imagepath_df.reset_index(drop=True), result_df], axis=1)
 
+            imagepath_df.index.name = 'd3mIndex'
+
         K.clear_session()
         
         # create metadata for the unicorn output dataframe
         unicorn_df = d3m_DataFrame(imagepath_df)
-        # first column (d3mIndex)
+        # first column (label)
         col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 0)))
-        col_dict['structural_type'] = type("1")
-        col_dict['name'] = 'd3mIndex'
-        col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/Attribute')
-        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 0), col_dict)
-        # second column (filename)
-        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 1)))
-        col_dict['structural_type'] = type("it is a string")
-        col_dict['name'] = "filename"
-        col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
-        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 1), col_dict)
-        # third column (bounding_box)
-        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 2)))
-        col_dict['structural_type'] = type("it is a string")
-        col_dict['name'] = "bounding_box"
-        col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
-        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 2), col_dict)
-        # fourth column (label)
-        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 3)))
         col_dict['structural_type'] = type("it is a string")
         col_dict['name'] = "label"
         col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
-        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 3), col_dict)
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 0), col_dict)
         # fifth column (pred_class)
-        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 4)))
+        col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 1)))
         col_dict['structural_type'] = type("1")
         col_dict['name'] = 'pred_class'
         col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/Attribute')
-        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 4), col_dict)
+        unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 1), col_dict)
         
         return CallResult(unicorn_df)
 
 
 if __name__ == '__main__':
     volumes = {} # d3m large primitive architecture dictionary of large files
-    volumes["croc_weights"]='/home/croc.tar.gz' # location of extracted required files archive
+    volumes["croc_weights"]= '/home/croc_weights' # location of extracted required files archive
     client = unicorn(
         hyperparams={
-            'target_columns': ['test_column'],
-            'output_labels': ['test_column_prefix']}, volumes=volumes)
-    imagepath_df = pd.DataFrame(
-        pd.Series(['http://i0.kym-cdn.com/photos/images/facebook/001/253/011/0b1.jpg',
-                   'http://i0.kym-cdn.com/photos/images/facebook/001/253/011/0b1.jpg']))
-    imagepath_df.columns = ['test_column']
-    result = client.produce(inputs=imagepath_df)
-    print(result.head)
+            'target_columns': ['filename'],
+            'output_labels': ['_object_label']}, volumes=volumes)
+    input_dataset = container.Dataset.load("file:///home/datasets_master/seed_datasets_current/LL1_penn_fudan_pedestrian/TRAIN/dataset_TRAIN/datasetDoc.json")
+    ds2df_client = DatasetToDataFrame.DatasetToDataFramePrimitive(hyperparams = {"dataframe_resource":"0"})
+    df = d3m_DataFrame(ds2df_client.produce(inputs = input_dataset).value) 
+    result = client.produce(inputs=df)
+    print(result.value)
