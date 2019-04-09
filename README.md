@@ -6,7 +6,7 @@ The base library can be found here: https://github.com/NewKnowledge/d3m_unicorn.
 
 ## Install
 
-pip3 install -e git+https://github.com/NewKnowledge/unicorn-d3m-wrapper.git#egg=UNICORN3mWrapper --process-dependency-links
+`pip3 install -e git+https://github.com/NewKnowledge/unicorn-d3m-wrapper.git#egg=UNICORN3mWrapper`
 
 ## Output
 
