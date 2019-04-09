@@ -10,10 +10,7 @@ setup(
     install_requires=[
         'pandas == 0.23.4',
         'numpy >= 1.15.4',
-        'd3m_unicorn >= 1.0.0'
-    ],
-    dependency_links=[
-        "git+https://github.com/NewKnowledge/d3m_unicorn@d7ff37e273469741e792b941e41f993f8569f14c#egg=d3m_unicorn-1.0.0"
+        'd3m_unicorn @ git+https://github.com/NewKnowledge/d3m_unicorn@d7ff37e273469741e792b941e41f993f8569f14c#egg=d3m_unicorn-1.0.0'
     ],
     entry_points={
         'd3m.primitives': [
