@@ -135,7 +135,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         -------
         output : A dataframe with image labels/classifications/cluster assignments
         """
-
+       
         target_columns = self.hyperparams['target_columns']
         output_labels = self.hyperparams['output_labels']
 
@@ -146,6 +146,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
             # initialize an empty dataframe
             result_df = pd.DataFrame()
             output_label = output_labels[i]
+
 
             # get the base uri from the column metadata and remove the the
             # scheme portion
@@ -160,6 +161,8 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
                     col_paths[i] = os.path.join(base_path, col_paths[i])
 
             result_df = image_analyzer.cluster_images(col_paths)
+            result_df.columns = ['filename', 'label']
+            imagepath_df.columns = ['image_path']
 
             imagepath_df = pd.concat(
                 [imagepath_df.reset_index(drop=True), result_df], axis=1)
@@ -170,16 +173,16 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         
         # create metadata for the unicorn output dataframe
         unicorn_df = d3m_DataFrame(imagepath_df)
-        # first column (label)
+        # second column (filename)
         col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 0)))
         col_dict['structural_type'] = type("it is a string")
-        col_dict['name'] = "label"
+        col_dict['name'] = "filename"
         col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
         unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 0), col_dict)
-        # fifth column (pred_class)
+        # third column (label)
         col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 1)))
         col_dict['structural_type'] = type("1")
-        col_dict['name'] = 'pred_class'
+        col_dict['name'] = 'label'
         col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/Attribute')
         unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 1), col_dict)
         
@@ -192,7 +195,7 @@ if __name__ == '__main__':
     client = unicorn(
         hyperparams={
             'target_columns': ['filename'],
-            'output_labels': ['_object_label']}, volumes=volumes)
+            'output_labels': ['label']}, volumes=volumes)
     input_dataset = container.Dataset.load("file:///home/datasets_master/seed_datasets_current/LL1_penn_fudan_pedestrian/TRAIN/dataset_TRAIN/datasetDoc.json")
     ds2df_client = DatasetToDataFrame.DatasetToDataFramePrimitive(hyperparams = {"dataframe_resource":"0"})
     df = d3m_DataFrame(ds2df_client.produce(inputs = input_dataset).value) 
