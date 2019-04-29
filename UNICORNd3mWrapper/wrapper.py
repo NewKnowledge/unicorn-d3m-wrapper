@@ -18,7 +18,7 @@ from keras import backend as K
 
 __author__ = 'Distil'
 __version__ = '1.1.0'
-__contact__ = 'mailto:numa@newknowledge.io'
+__contact__ = 'mailto:nklabs@newknowledge.io'
 
 Inputs = container.Dataset
 Outputs = container.Dataset
@@ -209,6 +209,6 @@ if __name__ == '__main__':
         hyperparams={
             'target_columns': ['filename'],
             'output_labels': ['label']}, volumes=volumes)
-    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/22_handgeometry/TRAIN/dataset_TRAIN/datasetDoc.json") 
+    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TRAIN/dataset_TRAIN/datasetDoc.json") 
     result = client.produce(inputs= input_dataset)
     print(result.value)
