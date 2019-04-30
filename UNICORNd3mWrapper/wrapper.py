@@ -140,6 +140,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         output_labels = self.hyperparams['output_labels']
         
         ds2df_client_zero = DatasetToDataFrame.DatasetToDataFramePrimitive(hyperparams = {"dataframe_resource":"0"})
+        inputs = imagepath_df
         imagepath_df  = d3m_DataFrame(ds2df_client_zero.produce(inputs = input_dataset).value)
         image_analyzer = Unicorn(weights_path=self.volumes["croc_weights"]+"/inception_v3_weights_tf_dim_ordering_tf_kernels.h5")
 
