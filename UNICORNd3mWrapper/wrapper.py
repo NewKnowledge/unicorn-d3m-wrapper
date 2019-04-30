@@ -140,7 +140,8 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         output_labels = self.hyperparams['output_labels']
         
         ds2df_client_zero = DatasetToDataFrame.DatasetToDataFramePrimitive(hyperparams = {"dataframe_resource":"0"})
-        imagepath_df  = d3m_DataFrame(ds2df_client_zero.produce(inputs = input_dataset).value)
+        inputs = d3m_DataFrame(ds2df_client_zero.produce(inputs = input_dataset).value)
+        imagepath_df = inputs
         image_analyzer = Unicorn(weights_path=self.volumes["croc_weights"]+"/inception_v3_weights_tf_dim_ordering_tf_kernels.h5")
 
         # target_columns = inputs.metadata.get_columns_with_semantic_type('https://metadata.datadrivendiscovery.org/types/Attribute')
@@ -209,6 +210,6 @@ if __name__ == '__main__':
         hyperparams={
             'target_columns': ['filename'],
             'output_labels': ['label']}, volumes=volumes)
-    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TRAIN/dataset_TRAIN/datasetDoc.json") 
+    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TEST/dataset_TEST/datasetDoc.json") 
     result = client.produce(inputs= input_dataset)
     print(result.value)
