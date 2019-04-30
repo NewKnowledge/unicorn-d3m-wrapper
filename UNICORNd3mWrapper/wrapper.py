@@ -209,6 +209,6 @@ if __name__ == '__main__':
         hyperparams={
             'target_columns': ['filename'],
             'output_labels': ['label']}, volumes=volumes)
-    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TRAIN/dataset_TRAIN/datasetDoc.json") 
+    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TEST/dataset_TEST/datasetDoc.json") 
     result = client.produce(inputs= input_dataset)
     print(result.value)
