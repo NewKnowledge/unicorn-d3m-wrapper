@@ -20,8 +20,8 @@ __author__ = 'Distil'
 __version__ = '1.1.0'
 __contact__ = 'mailto:nklabs@newknowledge.io'
 
-Inputs = container.Dataset
-Outputs = container.Dataset
+Inputs = container.dataset.Dataset
+Outputs = container.dataset.Dataset
 
 class Hyperparams(hyperparams.Hyperparams):
     target_columns = hyperparams.Set(
