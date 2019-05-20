@@ -184,10 +184,10 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         col_dict['name'] = 'd3mIndex'
         col_dict['semantic_types'] = ('http://schema.org/Integer', 'https://metadata.datadrivendiscovery.org/types/PrimaryKey')
         unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 0), col_dict)
-        # second column (image_file)
+        # second column (image)
         col_dict = dict(unicorn_df.metadata.query((metadata_base.ALL_ELEMENTS, 1)))
         col_dict['structural_type'] = type("it is a string")
-        col_dict['name'] = 'image_file'
+        col_dict['name'] = 'image'
         col_dict['semantic_types'] = ('http://schema.org/Text', 'https://metadata.datadrivendiscovery.org/types/Attribute')
         unicorn_df.metadata = unicorn_df.metadata.update((metadata_base.ALL_ELEMENTS, 1), col_dict)
         # third column (label)
@@ -207,6 +207,6 @@ if __name__ == '__main__':
         hyperparams={
             'target_columns': ['filename'],
             'output_labels': ['label']}, volumes=volumes)
-    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/uu_101_object_categories/TRAIN/dataset_TRAIN/datasetDoc.json") 
+    input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/124_188_usps/TRAIN/dataset_TRAIN/datasetDoc.json") 
     result = client.produce(inputs= input_dataset)
     print(result.value)
