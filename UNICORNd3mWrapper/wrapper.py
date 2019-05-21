@@ -79,7 +79,7 @@ class unicorn(TransformerPrimitiveBase[Inputs, Outputs, Hyperparams]):
         "installation": [
             {
                 "type": "PIP",
-                "package_uri": "git+https://github.com/NewKnowledge/d3m_unicorn.git@c53240153cb6afc016adf3df569b86e4afe20bcd#egg=d3m_unicorn"
+                "package_uri": "git+https://github.com/NewKnowledge/d3m_unicorn.git@fe8a7bc13fdd03a25b0eb583fec210adbef9644c#egg=d3m_unicorn"
             },
             {
                 "type": "PIP",
