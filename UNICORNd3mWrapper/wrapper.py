@@ -204,8 +204,7 @@ if __name__ == '__main__':
             'output_labels': ['label']}, volumes=volumes)
     hyperparams_class = denormalize.DenormalizePrimitive.metadata.query()['primitive_code']['class_type_arguments']['Hyperparams']
     denorm = denormalize.DenormalizePrimitive(hyperparams = hyperparams_class.defaults())
-    input_dataset = denorm.produce(inputs = container.Dataset.load("file:///home/datasets/seed_datasets_current/124_188_usps/TEST/dataset_TEST/datasetDoc.json")).value
-    #input_dataset = container.Dataset.load("file:///home/datasets/seed_datasets_current/124_188_usps/TEST/dataset_TEST/datasetDoc.json") 
+    input_dataset = denorm.produce(inputs = container.Dataset.load("file:///home/datasets/seed_datasets_current/124_188_usps/TRAIN/dataset_TRAIN/datasetDoc.json")).value 
     ds2df_client = DatasetToDataFrame.DatasetToDataFramePrimitive(hyperparams = {"dataframe_resource":"learningData"})
     df = d3m_DataFrame(ds2df_client.produce(inputs = input_dataset).value) 
     result = client.produce(inputs=df)
